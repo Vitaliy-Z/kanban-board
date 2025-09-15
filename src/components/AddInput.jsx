@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function AddInput({ addingTask, tasks }) {
+export default function AddInput({ addingTask, tasks, theme }) {
   const [newTaskContent, setNewTaskContent] = useState("");
   const [activeColumn, setActiveColumn] = useState("todo");
 
@@ -20,7 +20,11 @@ export default function AddInput({ addingTask, tasks }) {
     <div className="mb-6 md:mb-8 flex w-full max-w-xl md:max-w-2xl shadow-lg rounded-lg overflow-hidden flex-col sm:flex-row">
       <input
         type="text"
-        className="flex-grow p-3 bg-zinc-600 text-white outline-none w-full"
+        className={`flex-grow p-3 outline-none w-full ${
+          theme === "dark"
+            ? "bg-zinc-700 text-zinc-100 placeholder-zinc-400"
+            : "bg-white text-zinc-800 placeholder-zinc-500"
+        }`}
         value={newTaskContent}
         onChange={(e) => {
           setNewTaskContent(e.target.value.trim());
@@ -29,7 +33,11 @@ export default function AddInput({ addingTask, tasks }) {
         placeholder="Add a new task"
       />
       <select
-        className="p-2 bg-zinc-600 text-white border-0 border-t sm:border-t-0 sm:border-l border-zinc-500 outline-none w-full sm:w-auto"
+        className={`p-2 border-0 border-t sm:border-t-0 sm:border-l border-zinc-500 outline-none w-full sm:w-auto ${
+          theme === "dark"
+            ? "bg-zinc-700 text-zinc-100"
+            : "bg-white text-zinc-800"
+        }`}
         value={activeColumn}
         onChange={(e) => setActiveColumn(e.target.value)}
       >

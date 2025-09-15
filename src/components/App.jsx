@@ -42,6 +42,19 @@ function App() {
     }
   });
 
+  const [theme, setTheme] = useState(() => {
+    try {
+      const savedTheme = localStorage.getItem("kanbanTheme");
+      if (savedTheme === "light" || savedTheme === "dark") return savedTheme;
+      return window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    } catch {
+      return "light";
+    }
+  });
+
   const [draggingTask, setDraggingTask] = useState(null);
 
   useEffect(() => {
@@ -51,6 +64,18 @@ function App() {
       // ignore write errors
     }
   }, [tasks]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("kanbanTheme", theme);
+    } catch {
+      // ignore write errors
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   const onAddTask = (newTask, activeColumn) => {
     const updatedTasks = { ...tasks };
@@ -97,19 +122,38 @@ function App() {
   };
 
   return (
-    <div className="p-4 md:p-6 min-w-screen min-h-screen bg-gradient-to-b from-zinc-800 to-zinc-700 flex items-start md:items-center justify-center">
-      <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-4 md:gap-6">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-rose-400 text-center px-4">
+    <div
+      className={`p-4 md:p-6 min-w-screen min-h-screen bg-gradient-to-b ${
+        theme === "dark"
+          ? "from-zinc-800 to-zinc-700"
+          : "from-zinc-100 to-zinc-200"
+      } flex items-start md:items-center justify-center`}
+    >
+      <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-4 md:gap-6 relative">
+        <button
+          onClick={toggleTheme}
+          aria-label="Toggle color theme"
+          className={`fixed top-4 right-4 z-10 rounded-md px-3 py-2 shadow-md transition-colors ${
+            theme === "dark"
+              ? "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+              : "bg-white text-zinc-800 hover:bg-zinc-100"
+          }`}
+        >
+          {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+        </button>
+        <h1 className="mt-15 md:mt-0 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-rose-400 text-center px-4">
           Kanban Board
         </h1>
 
-        <AddInput addingTask={onAddTask} tasks={tasks} />
+        <AddInput addingTask={onAddTask} tasks={tasks} theme={theme} />
 
         <div className="flex flex-col md:flex-row gap-4 md:justify-between md:overflow-x-auto overflow-visible pb-4 md:pb-6 w-full">
           {Object.keys(tasks).map((columnId) => (
             <div
               key={columnId}
-              className={`flex-shrink-0 w-full md:w-80 bg-zinc-800 rounded-lg shadow-xl`}
+              className={`flex-shrink-0 w-full md:w-80 ${
+                theme === "dark" ? "bg-zinc-800" : "bg-white"
+              } rounded-lg shadow-xl`}
               onDragOver={(e) => {
                 handleDragOver(e);
               }}
@@ -126,12 +170,15 @@ function App() {
                   tasks[columnId].items.map((item) => (
                     <div
                       key={item.id}
-                      className="p-2 mb-3 bg-zinc-700 rounded-lg shadow-md cursor-move flex items-center justify-between transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                      className={`p-2 mb-3 rounded-lg shadow-md cursor-move flex items-center justify-between transition-all duration-200 hover:scale-105 hover:shadow-lg ${
+                        theme === "dark" ? "bg-zinc-700" : "bg-zinc-100"
+                      }`}
                       draggable
                       onDragStart={() => handleDragStart(columnId, item)}
                     >
                       <Card
                         item={item}
+                        theme={theme}
                         deleteTask={(itemId) => removeTask(columnId, itemId)}
                       />
                     </div>
