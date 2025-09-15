@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddInput from "./AddInput";
 import ColumnHeader from "./ColumnHeader";
 import Card from "./Card";
@@ -33,9 +33,24 @@ const initialTasks = {
 };
 
 function App() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState(() => {
+    try {
+      const saved = localStorage.getItem("kanbanTasks");
+      return saved ? JSON.parse(saved) : initialTasks;
+    } catch {
+      return initialTasks;
+    }
+  });
 
   const [draggingTask, setDraggingTask] = useState(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("kanbanTasks", JSON.stringify(tasks));
+    } catch {
+      // ignore write errors
+    }
+  }, [tasks]);
 
   const onAddTask = (newTask, activeColumn) => {
     const updatedTasks = { ...tasks };
