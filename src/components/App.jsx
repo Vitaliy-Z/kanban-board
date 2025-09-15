@@ -69,19 +69,11 @@ function App() {
   const [activeTaskId, setActiveTaskId] = useState(null);
 
   useEffect(() => {
-    try {
-      localStorage.setItem("kanbanTasks", JSON.stringify(tasks));
-    } catch {
-      // ignore write errors
-    }
+    localStorage.setItem("kanbanTasks", JSON.stringify(tasks));
   }, [tasks]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem("kanbanTheme", theme);
-    } catch {
-      // ignore write errors
-    }
+    localStorage.setItem("kanbanTheme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -105,12 +97,7 @@ function App() {
     setTasks(updatedTasks);
   };
 
-  const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, {
-      activationConstraint: { delay: 100, tolerance: 5 }
-    })
-  );
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   const findTaskById = (taskId) => {
     for (const columnKey of Object.keys(tasks)) {
@@ -132,7 +119,7 @@ function App() {
     setActiveTaskId(null);
     if (!over) return;
 
-    const destinationColumnKey = over.id; // columns use their columnId as droppable id
+    const destinationColumnKey = over.id;
     const source = findTaskById(active.id);
     if (!source) return;
 
