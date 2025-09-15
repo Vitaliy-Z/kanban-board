@@ -82,19 +82,19 @@ function App() {
   };
 
   return (
-    <div className="p-6 min-w-screen min-h-screen bg-gradient-to-b from-zinc-800 to-zinc-700 flex items-center justify-center">
-      <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-6">
-        <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-rose-400">
+    <div className="p-4 md:p-6 min-w-screen min-h-screen bg-gradient-to-b from-zinc-800 to-zinc-700 flex items-start md:items-center justify-center">
+      <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-4 md:gap-6">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-rose-400 text-center px-4">
           Kanban Board
         </h1>
 
         <AddInput addingTask={onAddTask} tasks={tasks} />
 
-        <div className="flex gap-6 overflow-x-auto pb-6 w-full">
+        <div className="flex flex-col md:flex-row gap-4 md:justify-between md:overflow-x-auto overflow-visible pb-4 md:pb-6 w-full">
           {Object.keys(tasks).map((columnId) => (
             <div
               key={columnId}
-              className={`flex-shrink-0 w-80 bg-zinc-800 rounded-lg shadow-xl`}
+              className={`flex-shrink-0 w-full md:w-80 bg-zinc-800 rounded-lg shadow-xl`}
               onDragOver={(e) => {
                 handleDragOver(e);
               }}

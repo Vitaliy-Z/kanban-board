@@ -13,8 +13,10 @@ export default function ColumnHeader({ tasks }) {
     <div
       className={`p-3 flex items-center rounded-t-md ${columnStyle[columnName]}`}
     >
-      <p className="text-white font-bold text-l uppercase">{tasks.name}</p>
-      <span className="ml-3 px-3 py-1 bg-zinc-800 bg-opacity-30 rounded-full text-sm">
+      <p className="text-white font-bold text-sm md:text-base uppercase">
+        {tasks.name}
+      </p>
+      <span className="ml-3 px-3 py-1 bg-zinc-800 bg-opacity-30 rounded-full text-xs md:text-sm">
         {tasks.items.length}
       </span>
     </div>
